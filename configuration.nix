@@ -17,22 +17,11 @@ in {
   #       ~/MyNix/configuration.nix
   #     ];
 
-  # Bootloader.
-  boot.loader = {
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot"; # ← use the same mount point here.
-    };
-    grub = {
-      enable = true;
-      efiSupport = true;
-      #efiInstallAsRemovable = true;
-      device = "nodev";
-      useOSProber = true;
-    };
-  };
+ # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos-homelab"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -92,46 +81,27 @@ in {
     #media-session.enable = true;
   };
 
-  # power manaengment settings
+    # power manaengment settings
   services.power-profiles-daemon.enable = false;
   services.thermald.enable = true;
 
-  services.tlp =
-    if config.fileSystems."/".device == "/dev/disk/by-uuid/4097a977-fad4-4d93-becf-fca0ac7f726c"
-    then {
-      enable = true;
-      settings = {
-        CPU_SCALING_GOVERNOR_ON_AC = "performance";
-        CPU_SCALING_GOVERNOR_ON_BAT = "balanced";
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "balanced";
 
-        CPU_ENERGY_PERF_POLICY_ON_BAT = "performance";
-        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
 
-        CPU_MIN_PERF_ON_AC = 0;
-        CPU_MAX_PERF_ON_AC = 100;
-        CPU_MIN_PERF_ON_BAT = 0;
-        CPU_MAX_PERF_ON_BAT = 60;
-      };
-    }
-    else {
-      enable = true;
-      settings = {
-        CPU_SCALING_GOVERNOR_ON_AC = "balanced";
-        CPU_SCALING_GOVERNOR_ON_BAT = "balanced";
+      CPU_MIN_PERF_ON_AC = 0;
+      CPU_MAX_PERF_ON_AC = 80;
 
-        CPU_ENERGY_PERF_POLICY_ON_BAT = "performance";
-        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-
-        CPU_MIN_PERF_ON_AC = 0;
-        CPU_MAX_PERF_ON_AC = 60;
-        CPU_MIN_PERF_ON_BAT = 0;
-        CPU_MAX_PERF_ON_BAT = 60;
-
-        #Optional helps save long term battery health
-        #    START_CHARGE_THRESH_BAT0 = 40; # 40 and bellow it starts to charge
-        #    STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
-      };
+      #Optional helps save long term battery health
+      #    START_CHARGE_THRESH_BAT0 = 40; # 40 and bellow it starts to charge
+      #    STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
     };
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -140,9 +110,9 @@ in {
   virtualisation.docker.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.j = {
+  users.users.boggy = {
     isNormalUser = true;
-    description = "j";
+    description = "boggy";
     extraGroups = ["networkmanager" "wheel" "docker"];
     packages = with pkgs; [
       #  thunderbird
@@ -150,7 +120,7 @@ in {
   };
 
   # Install firefox.
-  programs.firefox.enable = true;
+  # programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config = {
@@ -162,30 +132,16 @@ in {
 
   environment.systemPackages = with pkgs; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    nano
     wget
     neofetch
     macchina
-    gnome.gnome-tweaks
-    insync
-    keepassxc
-    vscodium
-    gedit
     tlp
-    brave
-    chromium
-    cups
-    gimp
-    numix-gtk-theme
-    obsidian
-    # audacity
-    # burp
-    calibre
     cmake
     curl
     ethtool
     ffmpeg
     git
-    gparted
     gzip
     hostname
     htop
@@ -193,43 +149,20 @@ in {
     iotop
     iperf3
     iperf
-    mozillavpn
-    numix-icon-theme-circle
-    numix-icon-theme
-    # qbittorrent
     tshark
-    # virtualbox
-    vlc
-    wireshark
-    # mattermost-desktop
-    isoimagewriter
-    signal-desktop
-    libreoffice-qt6-fresh
-    alejandra
     libnotify
     jq
     uutils-coreutils-noprefix
     ranger
     tor
-    tor-browser
     torsocks
     qrencode
     (python311.withPackages (ps: with ps; [numpy pwntools]))
     glib
     pkg-config
-    libreoffice-qt6-fresh
-    onlyoffice-bin_latest
-    gnumake
-    # virtualbox
-    anki
-    openscad
     pandoc
-    todoist-electron
     protonvpn-cli_2
-    mattermost-desktop
-    vscode
     protonvpn-gui
-    mgba
 
     # unstable packages
     unstable.signal-cli
