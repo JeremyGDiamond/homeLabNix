@@ -82,6 +82,12 @@ in {
   };
 
   # power manaengment settings
+  systemd.targets.sleep.enable = false;
+  systemd.targets.suspend.enable = false;
+  systemd.targets.hibernate.enable = false;
+  systemd.targets.hybrid-sleep.enable = false;
+  powerManagement.enable = false;
+
   services.power-profiles-daemon.enable = false;
   services.thermald.enable = true;
 
@@ -89,9 +95,6 @@ in {
     enable = true;
     settings = {
       CPU_SCALING_GOVERNOR_ON_AC = "performance";
-      CPU_SCALING_GOVERNOR_ON_BAT = "balanced";
-
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "performance";
       CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
 
       CPU_MIN_PERF_ON_AC = 0;
