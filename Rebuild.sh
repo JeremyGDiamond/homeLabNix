@@ -14,12 +14,10 @@ set -e
 # echo EnterPass
 sudo echo PassEntered
 
-# Edit your config
-codium ~/MyNix/ -wn
-wait $!
-
 # cd to your config dir
-pushd ~/MyNix
+pushd ~/homeLabNix
+
+nano configuration.nix
 
 # Early return if no changes were detected (thanks @singiamtel!)
 if git diff --quiet '*.nix'; then
@@ -35,7 +33,7 @@ alejandra . &>/dev/null \
 # Shows your changes
 git diff -U0 '*.nix'
 
-echo "NixOS Rebuilding..."
+echo "NixOS homelab Rebuilding..."
 
 # Rebuild, output simplified errors, log trackebacks
 sudo nixos-rebuild switch &>nixos-switch.log || (cat nixos-switch.log | grep --color error && exit 1)
@@ -56,5 +54,5 @@ git commit -m "$current"
 popd
 
 # Notify all OK!
-echo "NixOS Rebuilt OK!"
-notify-send -e "NixOS Rebuilt OK!" --icon=software-update-available
+echo "NixOS homelab Rebuilt OK!"
+notify-send -e "NixOS homelab Rebuilt OK!" --icon=software-update-available

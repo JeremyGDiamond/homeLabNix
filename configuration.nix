@@ -17,7 +17,7 @@ in {
   #       ~/MyNix/configuration.nix
   #     ];
 
- # Bootloader.
+  # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -81,7 +81,7 @@ in {
     #media-session.enable = true;
   };
 
-    # power manaengment settings
+  # power manaengment settings
   services.power-profiles-daemon.enable = false;
   services.thermald.enable = true;
 
@@ -163,6 +163,7 @@ in {
     pandoc
     protonvpn-cli_2
     protonvpn-gui
+    alejandra
 
     # unstable packages
     unstable.signal-cli
@@ -179,7 +180,7 @@ in {
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
