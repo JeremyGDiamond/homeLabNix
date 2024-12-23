@@ -2,7 +2,7 @@
 
 # pushs commits to remote
 
-pushd ~/MyNix
+pushd ~/homeLabNix
 
 git push origin
 
